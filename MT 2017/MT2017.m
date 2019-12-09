@@ -55,8 +55,8 @@ clear
     % Constraints
 Fmax = 1690*1000;
 dmax = 5*pi/180;
-umin = [0; -dmax*Fmax];
-umax = [Fmax; dmax*Fmax];
+umin = [0; -dmax*Fmax; 0];
+umax = [Fmax; dmax*Fmax; .17*Fmax];
 tmin = -20*pi/180;
 tmax = 20*pi/180;
 zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
@@ -75,7 +75,7 @@ N = 10/TS;
 % ok to seperate the terms because the cost is all within the same k
 tic
 z = sdpvar(4,N+1);
-u = sdpvar(2,N);
+u = sdpvar(3,N);
 
 Q = diag([1 1 5 5])/(1e8);
 
@@ -83,7 +83,7 @@ constraints = [z(:,1) == z0, z(:,end) == zN];
 cost = 0;
 
 for k = 1:N % stuff for all k to N-1
-    cost = cost + z(:,k)'*Q*z(:,k) + u(2,k)^2 + (u(1,k)/Fmax)^2; %objective
+    cost = cost + z(:,k)'*Q*z(:,k) + u(2,k)^2 + (u(1,k)/Fmax)^2 + u(3,k)^2; %objective
     constraints = [constraints z(:,k+1) == Rocketdyn(z(:,k),u(:,k)) , umin<= u(:,k) <= umax]; %dynf and u constr
 end
 
@@ -91,32 +91,7 @@ for k = 1:N+1 %stuff for all k to N
     constraints = [constraints zmin <= z(:,k)<= zmax]; %constr z_n+1
 end
 
-options = sdpsettings('verbose',1,'solver','quadprog');
-diagnostics = optimize(constraints, cost, options);
-zOpt = value(z)
-uOpt = value(u)
-toc
-%% Dereks practice
-%about 28 seconds (mine) vs 4 seconds
-tic
-z = sdpvar(4,N+1);
-u = sdpvar(2,N);
-
-Q = diag([1 1 5 5])/(1e8);
-
-constraints = [z(:,1) == z0, z(:,end) == zN];
-cost = 0;
-
-for k = 1:N % for all k to N-1
-    cost = cost + z(:,k)'*Q*z(:,k) + u(2,k)^2 + (u(1,k)/Fmax)^2; %objective
-    constraints = [constraints z(:,k+1) == Rocketdyn(z(:,k),u(:,k)), umin<= u(:,k) <= umax]; %dynf and u constr
-    
-    for i = 1:N+1 %for all k to N
-    constraints = [constraints zmin <= z(:,i)<= zmax]; %constr n
-    end
-    
-end
-options = sdpsettings('verbose',1,'solver','quadprog');
+options = sdpsettings('verbose',1,'solver','fmincon','usex0',1);
 diagnostics = optimize(constraints, cost, options);
 zOpt = value(z)
 uOpt = value(u)
@@ -141,12 +116,16 @@ xlabel('t (s)')
 ylabel('v (m/s)')
 
 figure;
-subplot(1,2,1)
+subplot(1,3,1)
 plot(linspace(0,10,N), uOpt(1,:))
 xlabel('t (s)')
 ylabel('F (N)')
-subplot(1,2,2)
+subplot(1,3,2)
 plot(linspace(0,10,N), uOpt(2,:)./uOpt(1,:)*180/pi)
+xlabel('t (s)')
+ylabel('\delta (degrees)')
+subplot(1,3,3)
+plot(linspace(0,10,N), uOpt(3,:)./uOpt(1,:)*180/pi)
 xlabel('t (s)')
 ylabel('\delta (degrees)')
 
@@ -168,7 +147,7 @@ for k = 1:N+1
     constraints = [constraints zmin <= z(:,k)<= zmax];
 end
 
-options = sdpsettings('verbose',1,'solver','quadprog');
+options = sdpsettings('verbose',1,'solver','fmincon','usex0',z0);
 diagnostics = optimize(constraints, cost, options);
 zOpt = value(z);
 uOpt = value(u);
