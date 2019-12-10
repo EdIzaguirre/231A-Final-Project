@@ -9,12 +9,12 @@ g = 9.8;
 % Constraints
 Fmax = 1690*1000;
 dmax = 5*pi/180;
-umin = [0; -dmax*Fmax; 0];
-umax = [Fmax; dmax*Fmax; .17];
+umin = [0; -dmax*Fmax; -0.05; -0.05];
+umax = [Fmax; dmax*Fmax; 0.05; 0.05];
 tmin = -20*pi/180;
 tmax = 20*pi/180;
 zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
-    % Initial conditions
+% Initial conditions
 v0 = 205.2;
 alt0 = -1228; %negative because the Z?axis is positive pointing downward 
 t0 = 10*pi/180;
@@ -29,9 +29,9 @@ N = 10/TS;
 % ok to seperate the terms because the cost is all within the same k
 tic
 z = sdpvar(4,N+1);
-u = sdpvar(3,N);
+u = sdpvar(4,N);
     
-Q = diag([1 1 5 5])/(1e8);
+Q = diag([1 15 10 15])/(1e8);
 
 constraints = [z(:,1) == z0, z(:,end) == zN];
 cost = 0;
@@ -45,7 +45,8 @@ for k = 1:N+1 %stuff for all k to N
     constraints = [constraints zmin <= z(:,k)<= zmax]; %constr z_n+1
 end
 
-options = sdpsettings('verbose',1,'solver','fmincon','usex0',1);
+options = sdpsettings('solver','IPOPT');
+% options = sdpsettings('verbose',1,'solver','fmincon','usex0',1);
 diagnostics = optimize(constraints, cost, options);
 zOpt = value(z)
 uOpt = value(u)
@@ -81,7 +82,10 @@ ylabel('\delta (degrees)')
 subplot(1,3,3)
 plot(linspace(0,10,N), uOpt(3,:)./uOpt(1,:)*180/pi)
 xlabel('t (s)')
-ylabel('\delta (degrees)')
+ylabel('\fin1 (degrees)')
+plot(linspace(0,10,N), uOpt(4,:)./uOpt(1,:)*180/pi)
+xlabel('t (s)')
+ylabel('\fin2 (degrees)')
 
 %% Problem 3(c)
 N = 5/TS;
