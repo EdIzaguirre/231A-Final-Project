@@ -1,62 +1,16 @@
-%% Problem 1(b)
-x1 = sdpvar(1,1);x2 = sdpvar(1,1);
-cost = -(x1^2+0.5*x2^2)/2;
-constraints = [x1+2*x2 == 1, 0<= x1<=1, 0<=x2<=1];
-options = sdpsettings('verbose', 0, 'solver', 'quadprog');
-optimize(constraints, cost, options);
-x1Opt = double(x1)
-x2Opt = double(x2)
-JOpt = double(cost)
-v = dual(constraints(1))
-u1 = dual(constraints(2))
-u2 = dual(constraints(3))
-
-%% Derek Practice 1b
-A = [-1 0 ; 1 0 ; 0 -1; 0 1];
-b = [0; 1; 0; 1];
-cost = @(x) -(x1^2+0.5*x2^2)/2;
-[x,fval,exitflag,output,lambda] = fmincon(cost,A,b);
-u = lambda.ineqlin
-
-%% Problem 1(b) (ii)
-g_f = [-x1Opt;-x2Opt/2];
-g_h = [1;2]; % Derivatives of dyanmic constraint
-g_g1 = [-1;0];
-g_g2 = [1;0];
-g_g3 = [0;-1];
-g_g4 = [0;1];
-
-
-epsilon = 1e-8;
-check1 = all(abs(g_f + u1(1)*g_g1 + u1(2)*g_g2 + u2(1)*g_g3 + u2(2)*g_g4 + v*g_h)<epsilon);
-check2 = abs(u1(1)*x1Opt)<epsilon && abs(u1(2)*(x1Opt-1))<epsilon && abs(u2(1)*x2Opt)<epsilon && abs(u2(2)*(x2Opt-1))<epsilon;
-check3 = u1(1) >=0 && u1(2) >=0 && u2(1) >=0 && u2(2) >=0;
-check4 = abs(x1Opt+2*x2Opt-1)<epsilon; % h_j >=0;
-check5 = x1Opt>= 0 && x1Opt<= 1 && x2Opt>= 0 && x2Opt<= 1; %g_i(zstar) >=0
-KKTsat = check1 && check2 && check3 && check4 && check5;
-
-%% Problem 1(c) ii
-c = [0;1];
-A = [3 -1;
-     -3 -1;
-     -1 0;
-     1 0];
-b = [-2;2;3;10];
-[x,fval] = linprog(c,A,b)
-z = x(1);
-
-%% Problem 3
+%% Rocket Landing with Grid Fins
 clear
 % Parameters
-    m = 27648;
-    l = 70;
-    J = 1/16*m*l^2;
-    g = 9.8;
-    % Constraints
+m = 27648;
+l = 70;
+J = 1/16*m*l^2;
+g = 9.8;
+
+% Constraints
 Fmax = 1690*1000;
 dmax = 5*pi/180;
 umin = [0; -dmax*Fmax; 0];
-umax = [Fmax; dmax*Fmax; .17*Fmax];
+umax = [Fmax; dmax*Fmax; .17];
 tmin = -20*pi/180;
 tmax = 20*pi/180;
 zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
@@ -76,7 +30,7 @@ N = 10/TS;
 tic
 z = sdpvar(4,N+1);
 u = sdpvar(3,N);
-
+    
 Q = diag([1 1 5 5])/(1e8);
 
 constraints = [z(:,1) == z0, z(:,end) == zN];
