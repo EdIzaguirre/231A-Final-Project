@@ -13,7 +13,7 @@ umin = [0; -dmax*Fmax; -0.05; -0.05];
 umax = [Fmax; dmax*Fmax; 0.05; 0.05];
 tmin = -20*pi/180;
 tmax = 20*pi/180;
-zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
+zmin = [tmin; -50; -3000; -100]; zmax = [tmax; 50; 0; 500];
 % Initial conditions
 v0 = 205.2;
 alt0 = -1228; %negative because the Z?axis is positive pointing downward 
@@ -37,7 +37,7 @@ constraints = [z(:,1) == z0, z(:,end) == zN];
 cost = 0;
 
 for k = 1:N % stuff for all k to N-1
-    cost = cost + z(:,k)'*Q*z(:,k) + u(2,k)^2 + (u(1,k)/Fmax)^2 + u(3,k)^2; %objective
+    cost = cost + z(:,k)'*Q*z(:,k) + u(2,k)^2 + (u(1,k)/Fmax)^2 + u(3,k)^2+ u(4,k)^2; %objective
     constraints = [constraints z(:,k+1) == Rocketdyn(z(:,k),u(:,k)) , umin<= u(:,k) <= umax]; %dynf and u constr
 end
 
@@ -71,21 +71,22 @@ xlabel('t (s)')
 ylabel('v (m/s)')
 
 figure;
-subplot(1,3,1)
+subplot(1,4,1)
 plot(linspace(0,10,N), uOpt(1,:))
 xlabel('t (s)')
 ylabel('F (N)')
-subplot(1,3,2)
+subplot(1,4,2)
 plot(linspace(0,10,N), uOpt(2,:)./uOpt(1,:)*180/pi)
 xlabel('t (s)')
 ylabel('\delta (degrees)')
-subplot(1,3,3)
+subplot(1,4,3)
 plot(linspace(0,10,N), uOpt(3,:)./uOpt(1,:)*180/pi)
 xlabel('t (s)')
-ylabel('\fin1 (degrees)')
+ylabel('fin1 (degrees)')
+subplot(1,4,4)
 plot(linspace(0,10,N), uOpt(4,:)./uOpt(1,:)*180/pi)
 xlabel('t (s)')
-ylabel('\fin2 (degrees)')
+ylabel('fin2 (degrees)')
 
 %% Problem 3(c)
 N = 5/TS;
