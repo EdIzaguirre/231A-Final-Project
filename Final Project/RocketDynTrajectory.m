@@ -26,6 +26,29 @@ f_2 = new_dyn(2);
 f_3 = new_dyn(3);
 f_4 = new_dyn(4);
 
+%% Converting from Sym to YALMIP
+s = char(f_1);
+s = strrep(s,char(omega),'z(2)');
+f_1 = eval(s);
+
+s = char(f_2);
+s = strrep(s,char(u1),'u(1)');
+s = strrep(s,char(u2),'u(2)');
+s = strrep(s,char(u3),'u(3)');
+s = strrep(s,char(u4),'u(4)');
+f_2 = eval(s);
+
+s = char(f_3);
+s = strrep(s,char(v),'z(4)');
+f_3 = eval(s);
+
+s = char(f_4);
+s = strrep(s,char(u1),'u(1)');
+s = strrep(s,char(u3),'u(3)');
+s = strrep(s,char(u4),'u(4)');
+f_4 = eval(s);
+
+%% Propogating Dynamics
 znext(1,1) = z(1) + TS*f_1;
 znext(2,1) = z(2) + TS*f_2;
 znext(3,1) = z(3) + TS*f_3;
