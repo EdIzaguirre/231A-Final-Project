@@ -1,10 +1,4 @@
 %% Rocket Landing with Grid Fins
-clear
-% Parameters
-m = 27648;
-l = 70;
-J = 1/16*m*l^2;
-g = 9.8;
 
 % Constraints
 Fmax = 1690*1000;
@@ -36,16 +30,19 @@ Q = diag([1 15 10 15])/(1e8);
 constraints = [z(:,1) == z0, z(:,end) == zN];
 cost = 0;
 
+xBar = xBar();
+
 for k = 1:N % stuff for all k to N-1
-    cost = cost + z(:,k)'*Q*z(:,k) + u(2,k)^2 + (u(1,k)/Fmax)^2 + u(3,k)^2; %objective
-    constraints = [constraints z(:,k+1) == Rocketdyn(z(:,k),u(:,k)) , umin<= u(:,k) <= umax]; %dynf and u constr
+    xbar_k = xBar(k,:);
+    cost = cost + z(:,k)'*Q*z(:,k) + u(2,k)^2 + (u(1,k)/Fmax)^2 + u(3,k)^2 + u(4,k)^2; %objective
+    constraints = [constraints z(:,k+1) == RocketDynTrajectory(z(:,k),u(:,k),xbar_k) , umin<= u(:,k) <= umax]; %dynf and u constr
 end
 
 for k = 1:N+1 %stuff for all k to N
     constraints = [constraints zmin <= z(:,k)<= zmax]; %constr z_n+1
 end
 
-options = sdpsettings('solver','IPOPT');
+options = sdpsettings('solver','quadprog');
 % options = sdpsettings('verbose',1,'solver','fmincon','usex0',1);
 diagnostics = optimize(constraints, cost, options);
 zOpt = value(z)
