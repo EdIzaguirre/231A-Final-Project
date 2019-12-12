@@ -25,7 +25,7 @@ zN = [0;0;0;0];
 TS = 0.1;
     
 % Define horizon
-N = 55;
+N = 54;
 M = 100;
 zOpt = zeros(4,M+1);
 zOpt(:,1) = z0;
@@ -40,7 +40,7 @@ for t = 1:M
 
     Q = diag([1 1 5 5])/(1e8);
 
-    constraints = [z(:,1) == z0, z(:,end) == zN];
+    constraints = [z(:,1) == zOpt(:,t), z(:,end) == zN];
     cost = 0;
     for k = 1:N
         cost = cost + z(:,k)'*Q*z(:,k) + u(2,k)^2 + (u(1,k)/Fmax)^2;
@@ -55,18 +55,18 @@ for t = 1:M
     sol = optimize(constraints, cost, options);
     
     if sol.problem == 0
-        zOpt = value(z);
-        uOpt = value(u);
+        zO = value(z);
+        uO = value(u);
     else
         feas = 0;
         disp("infeasible solution");
         disp("exiting the simulation");
-        xOpt = [];
-        uOpt = [];
+        zO = [];
+        uO = [];
         return;
     end
     
-    uOpt(:,t) = u(:,1);
+    uOpt(:,t) = uO(:,1);
     zOpt(:,t+1) = Rocketdyn(zOpt(:,t),uOpt(:,t));
 end
     
@@ -74,28 +74,28 @@ end
 %%
 figure;
 subplot(2,2,1)
-plot(linspace(0,10,N+1), zOpt(1,:))
+plot(linspace(0,10,M+1), zOpt(1,:))
 xlabel('t')
 ylabel('\theta (rad)')
 subplot(2,2,2)
-plot(linspace(0,10,N+1), zOpt(2,:))
+plot(linspace(0,10,M+1), zOpt(2,:))
 xlabel('t')
 ylabel('\omega (rad/s)')
 subplot(2,2,3)
-plot(linspace(0,10,N+1), zOpt(3,:))
+plot(linspace(0,10,M+1), zOpt(3,:))
 xlabel('t (s)')
 ylabel('h (m)')
 subplot(2,2,4)
-plot(linspace(0,10,N+1), zOpt(4,:))
+plot(linspace(0,10,M+1), zOpt(4,:))
 xlabel('t (s)')
 ylabel('v (m/s)')
 
 figure;
 subplot(1,2,1)
-plot(linspace(0,10,N), uOpt(1,:))
+plot(linspace(0,10,M), uOpt(1,:))
 xlabel('t (s)')
 ylabel('F (N)')
 subplot(1,2,2)
-plot(linspace(0,10,N), uOpt(2,:)./uOpt(1,:)*180/pi)
+plot(linspace(0,10,M), uOpt(2,:)./uOpt(1,:)*180/pi)
 xlabel('t (s)')
 ylabel('\delta (degrees)')
