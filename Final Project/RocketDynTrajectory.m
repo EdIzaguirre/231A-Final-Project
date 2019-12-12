@@ -12,19 +12,13 @@ Fd1 = 1/2*rho*z(4)^2*Cd*A_tot*sin(u(3));
 Fd2 = 1/2*rho*z(4)^2*Cd*A_tot*sin(u(4));
 
 syms theta omega h v u1 u2 u3 u4
-
 Syms = [theta omega h v u1 u2 u3 u4];
     
+% Getting Linear Dynamics and Placing into Functions
 A = linDynamics(); 
-
 A_bar = double(subs(A,Syms,xbar));
-
 new_dyn = A_bar*transpose(Syms);
-
-f_1 = new_dyn(1);
-f_2 = new_dyn(2);
-f_3 = new_dyn(3);
-f_4 = new_dyn(4);
+f_1 = new_dyn(1); f_2 = new_dyn(2); f_3 = new_dyn(3); f_4 = new_dyn(4);
 
 %% Converting from Sym to YALMIP
 s = char(f_1);

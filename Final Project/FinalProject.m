@@ -1,26 +1,28 @@
-%% Rocket Landing with Grid Fins
+%% Rocket Landing with Grid Fins (Linearized)
 
 % Constraints
 Fmax = 1690*1000;
 dmax = 5*pi/180;
-umin = [0; -dmax*Fmax; -0.05; -0.05];
-umax = [Fmax; dmax*Fmax; 0.05; 0.05];
+umin = [0; -dmax; 0; 0];
+umax = [Fmax; dmax; 0.174; 0.174];
 tmin = -20*pi/180;
 tmax = 20*pi/180;
 zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
+
 % Initial conditions
 v0 = 205.2;
-alt0 = -1228; %negative because the Z?axis is positive pointing downward 
+alt0 = -1061;
 t0 = 10*pi/180;
 z0 = [t0; 0; alt0; v0];
 zN = [0;0;0;0];
-    % Define sampling time
+
+% Define sampling time
 TS = 0.1;
-    % Define horizon
+
+% Define horizon
 N = 10/TS;
 
-%%
-% ok to seperate the terms because the cost is all within the same k
+%% Optimization
 tic
 z = sdpvar(4,N+1);
 u = sdpvar(4,N);
@@ -34,7 +36,7 @@ xBar = xBar();
 
 for k = 1:N % stuff for all k to N-1
     xbar_k = xBar(k,:);
-    cost = cost + z(:,k)'*Q*z(:,k) + u(2,k)^2 + (u(1,k)/Fmax)^2 + u(3,k)^2 + u(4,k)^2; %objective
+    cost = cost + z(:,k)'*Q*z(:,k) + (u(1,k)/Fmax)^2 + u(2,k)^2 + u(3,k)^2 + u(4,k)^2; %objective
     constraints = [constraints z(:,k+1) == RocketDynTrajectory(z(:,k),u(:,k),xbar_k) , umin<= u(:,k) <= umax]; %dynf and u constr
 end
 
@@ -48,7 +50,8 @@ diagnostics = optimize(constraints, cost, options);
 zOpt = value(z)
 uOpt = value(u)
 toc
-%%
+
+%% Plotting
 figure;
 subplot(2,2,1)
 plot(linspace(0,10,N+1), zOpt(1,:))
@@ -68,21 +71,22 @@ xlabel('t (s)')
 ylabel('v (m/s)')
 
 figure;
-subplot(1,3,1)
+subplot(1,4,1)
 plot(linspace(0,10,N), uOpt(1,:))
 xlabel('t (s)')
 ylabel('F (N)')
-subplot(1,3,2)
+subplot(1,4,2)
 plot(linspace(0,10,N), uOpt(2,:)./uOpt(1,:)*180/pi)
 xlabel('t (s)')
 ylabel('\delta (degrees)')
-subplot(1,3,3)
+subplot(1,4,3)
 plot(linspace(0,10,N), uOpt(3,:)./uOpt(1,:)*180/pi)
 xlabel('t (s)')
-ylabel('\fin1 (degrees)')
+ylabel('fin1 (degrees)')
+subplot(1,4,4)
 plot(linspace(0,10,N), uOpt(4,:)./uOpt(1,:)*180/pi)
 xlabel('t (s)')
-ylabel('\fin2 (degrees)')
+ylabel('fin2 (degrees)')
 
 
 
