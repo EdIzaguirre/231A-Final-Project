@@ -27,8 +27,8 @@ function [xBar] = xBar()
     a = F/m - g; %m/s^2
 
     % Getting Proper Time Spacing 
-    N = 100;  % 100 Samples
-    totTime = linspace(0,10,100);
+    N = 101;  % 100 Samples
+    totTime = linspace(0,10,N);
     TS = totTime(2) - totTime(1);  
 
     % Begin Simulation
@@ -39,7 +39,7 @@ function [xBar] = xBar()
         nextHeight = y0 + (1/2) * a * TS^2 + v0 * TS;
         t = t+TS;
 
-        % Append to lists and reinitializ v0 and h
+        % Append to lists and reinitialize v0 and h
         vList = [vList; nextVelocity]; hList = [hList; nextHeight]; 
         v0 = vList(end); y0 = hList(end);
     end
@@ -50,19 +50,19 @@ function [xBar] = xBar()
     u2List = zeros(N,1);
     u3List = zeros(N,1);
     u4List = zeros(N,1);
-    xBar = [thetaList, omegaList, -hList, vList, u1List, u2List, u3List, u4List];
+    xBar = [thetaList, omegaList, -hList, -vList, u1List, u2List, u3List, u4List];
     % Negative because I solved the above problems assuming up is positive.
     
     %% Checking to see if the trajectory looks good
     figure();
     subplot(2,1,1)
-    plot(linspace(1,10,100),-hList)
+    plot(linspace(1,10,101),-hList)
     title('Height vs. Time')
     xlabel('Time (sec)')
     ylabel('Height (m) (Negative is up)')
     hold on;
     subplot(2,1,2)
-    plot(linspace(1,10,100),-vList)
+    plot(linspace(1,10,101),-vList)
     title('Velocity vs. Time')
     xlabel('Time (sec)')
     ylabel('Velocity (m/s) (Positive is down)')

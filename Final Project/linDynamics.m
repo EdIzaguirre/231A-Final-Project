@@ -1,4 +1,4 @@
-function A = linDynamics()
+function [Ac,Bc] = linDynamics()
     clear; clc;
 
     %% Begin with continous time dynamics
@@ -27,6 +27,8 @@ function A = linDynamics()
     f4 = g - (1/m)*u1 - (1/m)*(Fd1 + Fd2);
 
     % Obtain linearized dynamics 
-    A = jacobian([f1, f2, f3, f4],Syms);
+    A_temp = jacobian([f1, f2, f3, f4],Syms);
+    Ac = A_temp(:,1:4);
+    Bc = A_temp(:,5:8);
 
 end

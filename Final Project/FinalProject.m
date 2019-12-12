@@ -4,7 +4,7 @@
 Fmax = 1690*1000;
 dmax = 5*pi/180;
 umin = [0; -dmax; 0; 0];
-umax = [Fmax; dmax; 200; 200];  % 200 is miniumum for u3 and u4
+umax = [Fmax; dmax; 1150*pi/180; 1150*pi/180];  % 200 is miniumum for u3 and u4
 tmin = -20*pi/180;
 tmax = 20*pi/180;
 zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
@@ -36,8 +36,9 @@ xBar = xBar();
 
 for k = 1:N % stuff for all k to N-1
     xbar_k = xBar(k,:);
+    xbar_kNext = xBar(k+1,:);
     cost = cost + z(:,k)'*Q*z(:,k) + (u(1,k)/Fmax)^2 + u(2,k)^2 + u(3,k)^2 + u(4,k)^2; %objective
-    constraints = [constraints z(:,k+1) == RocketDynTrajectory(z(:,k),u(:,k),xbar_k) , umin<= u(:,k) <= umax]; %dynf and u constr
+    constraints = [constraints z(:,k+1) == RocketDynTrajectory(z(:,k),u(:,k),xbar_k,xbar_kNext) , umin<= u(:,k) <= umax]; %dynf and u constr
 end
 
 for k = 1:N+1 %stuff for all k to N
