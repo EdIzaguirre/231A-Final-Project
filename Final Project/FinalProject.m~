@@ -4,7 +4,7 @@
 Fmax = 1690*1000;
 dmax = 5*pi/180;
 umin = [0; -dmax; 0; 0];
-umax = [Fmax; dmax; 200; 200];  % 200 is miniumum for u3 and u4
+umax = [Fmax; dmax; 10000; 100];
 tmin = -20*pi/180;
 tmax = 20*pi/180;
 zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
@@ -80,11 +80,11 @@ plot(linspace(0,10,N), uOpt(2,:)./uOpt(1,:)*180/pi)
 xlabel('t (s)')
 ylabel('\delta (degrees)')
 subplot(1,4,3)
-plot(linspace(0,10,N), uOpt(3,:)*180/pi)
+plot(linspace(0,10,N), uOpt(3,:)./uOpt(1,:)*180/pi)
 xlabel('t (s)')
 ylabel('fin1 (degrees)')
 subplot(1,4,4)
-plot(linspace(0,10,N), uOpt(4,:)*180/pi)
+plot(linspace(0,10,N), uOpt(4,:)./uOpt(1,:)*180/pi)
 xlabel('t (s)')
 ylabel('fin2 (degrees)')
 
