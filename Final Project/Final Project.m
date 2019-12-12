@@ -8,16 +8,18 @@ g = 9.8;
 
 % Constraints
 Fmax = 1690*1000;
-dmax = 5*pi/180;
-umin = [0; -dmax*Fmax; -0.05; -0.05];
-umax = [Fmax; dmax*Fmax; 0.05; 0.05];
-tmin = -20*pi/180;
-tmax = 20*pi/180;
-zmin = [tmin; -50; -3000; -100]; zmax = [tmax; 50; 0; 500];
+dmax = 8*pi/180; 
+umin = [0; -dmax*Fmax; -0.1; -0.1];
+umax = [Fmax; dmax*Fmax*1.5; 0.05; 0.05]; %1.5
+tmin = -40*pi/180;
+tmax = 40*pi/180;
+zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
+
+
 % Initial conditions
 v0 = 205.2;
 alt0 = -1228; %negative because the Z?axis is positive pointing downward 
-t0 = 10*pi/180;
+t0 = 10*pi/180; %10*pi/180
 z0 = [t0; 0; alt0; v0];
 zN = [0;0;0;0];
     % Define sampling time
@@ -31,7 +33,7 @@ tic
 z = sdpvar(4,N+1);
 u = sdpvar(4,N);
     
-Q = diag([1 15 10 15])/(1e8);
+Q = diag([1 15 5 15])/(1e8); %[1 15 5 15]
 
 constraints = [z(:,1) == z0, z(:,end) == zN];
 cost = 0;
@@ -41,15 +43,15 @@ for k = 1:N % stuff for all k to N-1
     constraints = [constraints z(:,k+1) == Rocketdyn(z(:,k),u(:,k)) , umin<= u(:,k) <= umax]; %dynf and u constr
 end
 
-for k = 1:N+1 %stuff for all k to N
+for k = 1:N+1 % stuff for all k to N
     constraints = [constraints zmin <= z(:,k)<= zmax]; %constr z_n+1
 end
 
 options = sdpsettings('solver','IPOPT');
 % options = sdpsettings('verbose',1,'solver','fmincon','usex0',1);
 diagnostics = optimize(constraints, cost, options);
-zOpt = value(z)
-uOpt = value(u)
+zOpt = value(z);
+uOpt = value(u);
 toc
 %%
 figure;
