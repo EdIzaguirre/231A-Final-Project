@@ -18,7 +18,7 @@ function [xBar] = xBar()
     y0 = 1061; % meters
 
     % Finding constant force to get rocket to land
-    F = m * (g + (0 - (v0))/deltaT);
+    F = m * (g + (0 - (v0))/deltaT)
 
     %% Simulating for N steps
 
@@ -26,7 +26,7 @@ function [xBar] = xBar()
     a = F/m - g; %m/s^2
 
     % Getting Proper Time Spacing 
-    N = 101;  % 100 Samples
+    N = 99;  % 100 Samples
     totTime = linspace(0,10,N);
     TS = totTime(2) - totTime(1);  
 
@@ -66,7 +66,6 @@ function [xBar] = xBar()
     xlabel('Time (sec)')
     ylabel('Velocity (m/s) (Positive is down)')
 end
-
 
 
 
