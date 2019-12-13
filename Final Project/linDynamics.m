@@ -14,8 +14,8 @@ function [Ac,Bc] = linDynamics()
 
     % Drag constants/variables
     rho = 1.225;
-    Cd = 0.14;
-    A_tot = 1.5;
+    Cd = 0.45;
+    A_tot = 100;
     b = 9;
     Fd1 = 1/2*rho*v^2*Cd*A_tot*sin(u3);
     Fd2 = 1/2*rho*v^2*Cd*A_tot*sin(u4);

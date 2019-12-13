@@ -2,7 +2,7 @@
 
 % Constraints
 %Fmax = 1690*1000;
-Fmax = 856000;
+Fmax = 856000; % 8.3829e+05 number used in constant acceleration
 dmax = 5*pi/180;
 umin = [0; -dmax; 0; 0];
 umax = [Fmax; dmax; 90*pi/180; 90*pi/180];  % 200 is miniumum for u3 and u4
@@ -12,7 +12,7 @@ zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
 
 % Initial conditions
 v0 = 205.2;
-alt0 = -1061;
+alt0 = -1061; % -1228m in Original Problem
 t0 = 10*pi/180;
 z0 = [t0; 0; alt0; v0];
 zN = [0;0;0;0];
@@ -21,7 +21,7 @@ zN = [0;0;0;0];
 TS = 0.1;
 
 % Define horizon
-N = 10/TS;
+N = 98;
 
 %% Optimization
 tic
@@ -90,13 +90,17 @@ plot(linspace(0,10,N), uOpt(4,:)*180/pi)
 xlabel('t (s)')
 ylabel('fin2 (degrees)')
 
+%% Calculation of Drag Forces
 
+% Drag constants/variables
+rho = 1.225;
+Cd = 0.45;
+A_tot = 100;
+b = 9;
+Fd1 = (1/2*rho*Cd*A_tot*sin(uOpt(3,:)).*zOpt(4,1:end-1).^2)';
+Fd2 = (1/2*rho*Cd*A_tot*sin(uOpt(4,:)).*zOpt(4,1:end-1).^2)';
 
-
-
-
-
-
+Fd1 + Fd2
 
 
 
