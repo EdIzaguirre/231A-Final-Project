@@ -4,7 +4,7 @@
 Fmax = 1690*1000;
 dmax = 5*pi/180;
 umin = [0; -dmax; 0; 0];
-umax = [Fmax; dmax; 1150*pi/180; 1150*pi/180];  % 200 is miniumum for u3 and u4
+umax = [Fmax; dmax; 5*pi/180; 5*pi/180];  % 200 is miniumum for u3 and u4
 tmin = -20*pi/180;
 tmax = 20*pi/180;
 zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
