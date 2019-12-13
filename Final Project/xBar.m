@@ -1,5 +1,4 @@
 function [xBar] = xBar()
-    clc; clear;
     %% Finding fixed trajectory
     % Note: Borelli said to set all grid fin inputs to 0 (u3 and u4), set the
     % gimbal angle to 0 (u2) and set F (u1) to some function slightly greater
@@ -38,7 +37,7 @@ function [xBar] = xBar()
         nextVelocity = a*TS + v0;
         nextHeight = y0 + (1/2) * a * TS^2 + v0 * TS;
         t = t+TS;
-
+        
         % Append to lists and reinitialize v0 and h
         vList = [vList; nextVelocity]; hList = [hList; nextHeight]; 
         v0 = vList(end); y0 = hList(end);
@@ -56,13 +55,13 @@ function [xBar] = xBar()
     %% Checking to see if the trajectory looks good
     figure();
     subplot(2,1,1)
-    plot(linspace(1,10,101),-hList)
+    plot(linspace(1,10,N),-hList)
     title('Height vs. Time')
     xlabel('Time (sec)')
     ylabel('Height (m) (Negative is up)')
     hold on;
     subplot(2,1,2)
-    plot(linspace(1,10,101),-vList)
+    plot(linspace(1,10,N),-vList)
     title('Velocity vs. Time')
     xlabel('Time (sec)')
     ylabel('Velocity (m/s) (Positive is down)')
