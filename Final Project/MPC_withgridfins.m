@@ -1,5 +1,5 @@
 %% Rocket Landing with Grid Fins (Linearized)
-
+clc; clear;
 % Constraints
 %Fmax = 1690*1000;
 Fmax = 856000;
@@ -27,8 +27,10 @@ zOpt = zeros(4,M+1);
 zOpt(:,1) = z0;
 uOpt = zeros(4,M);
 
+xBar = xBar();
 %% Optimization
 for t = 1:M
+%     xBar = xBar1(t:t+N,:);
     disp(t);
     z = sdpvar(4,N+1);
     u = sdpvar(4,N);
@@ -37,8 +39,6 @@ for t = 1:M
 
     constraints = [z(:,1) == zOpt(:,t), z(:,end) == zN];
     cost = 0;
-
-    xBar = xBar();
 
     for k = 1:N % stuff for all k to N-1
         xbar_k = xBar(k,:);
