@@ -21,7 +21,7 @@ zN = [0;0;0;0];
 TS = 0.1;
 
 % Define horizon
-N = 98;
+N = 55;
 
 %% Optimization
 tic
