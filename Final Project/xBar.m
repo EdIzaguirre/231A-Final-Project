@@ -27,18 +27,18 @@ function [xBar] = xBar()
     y0 = l/2 -(1/2 * a * deltaT^2 + v0*deltaT);
 
     % Getting Proper Time Spacing 
-<<<<<<< HEAD
 % <<<<<<< HEAD
-    N = 51;  % 100 Samples
+% <<<<<<< HEAD
+%     N = 101;  % 100 Samples
 % =======
 %     N = 100;  % 100 Samples
 % >>>>>>> 1c05e3d1fb9d9d11b5a23b4ca85d48745d4148fc
-    totTime = linspace(0,10,N);
-=======
+%     totTime = linspace(0,10,N);
+% =======
     N = 101;  % 100 Samples
     
     totTime = linspace(0,deltaT,N);
->>>>>>> a524e760634373dd268522f47778d755209ca630
+% >>>>>>> a524e760634373dd268522f47778d755209ca630
     TS = totTime(2) - totTime(1);  
 
     % Begin Simulation

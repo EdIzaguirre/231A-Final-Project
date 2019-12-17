@@ -8,7 +8,7 @@ function znext = RocketDynTrajectory(z,u,xbar,xbarNext,noise)
         0.1;
         0.1];   % Angle noise needs to be smaller (due to radians) than other noise.
     
-    TS = 0.1;
+    TS = 0.2525;
 
     % Getting Linear Dynamics and Placing into Functions
     [Ac,Bc] = linDynamics(); 

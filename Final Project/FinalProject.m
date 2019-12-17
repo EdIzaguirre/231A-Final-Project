@@ -15,7 +15,7 @@ v0 = 110;
 alt0 = -1410; % -1228m in Original Problem
 t0 = 10*pi/180;
 z0 = [t0; 0; alt0; v0];
-zN = [0;0;0;0];
+zN = [0;0;35;0];
 
 % Define horizon
 deltaT = 25;
