@@ -13,22 +13,23 @@ function [xBar] = xBar()
     g = 9.8;
 
     % Initial conditions
-    deltaT = 10; %seconds
-    v0 = -205.2; % meters/sec
-    y0 = 1061; % meters
+    deltaT = 25; %seconds
+    v0 = -110; % meters/sec
 
     % Finding constant force to get rocket to land
     F = m * (g + (0 - (v0))/deltaT);
 
-    %% Simulating for N steps
-
+    %%
     % Calculate Acceleration
     a = F/m - g; %m/s^2
+
+    % Calculate Original Height
+    y0 = l/2 -(1/2 * a * deltaT^2 + v0*deltaT);
 
     % Getting Proper Time Spacing 
     N = 101;  % 100 Samples
     
-    totTime = linspace(0,10,N);
+    totTime = linspace(0,deltaT,N);
     TS = totTime(2) - totTime(1);  
 
     % Begin Simulation
