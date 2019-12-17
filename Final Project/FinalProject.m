@@ -4,15 +4,15 @@
 %Fmax = 1690*1000;
 Fmax = 856000; % 8.3829e+05 number used in constant acceleration
 dmax = 5*pi/180;
-umin = [0; -dmax; 0; 0];
-umax = [Fmax; dmax; 90*pi/180; 90*pi/180];  % 200 is miniumum for u3 and u4
+umin = [0; -dmax*Fmax; 0; 0];
+umax = [Fmax; dmax*Fmax; 90*pi/180; 90*pi/180];  % 200 is miniumum for u3 and u4
 tmin = -20*pi/180;
 tmax = 20*pi/180;
 zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
 
 % Initial conditions
 v0 = 205.2;
-alt0 = -1061; % -1228m in Original Problem
+alt0 = -1228; % -1228m in Original Problem
 t0 = 10*pi/180;
 z0 = [t0; 0; alt0; v0];
 zN = [0;0;0;0];
@@ -21,7 +21,7 @@ zN = [0;0;0;0];
 TS = 0.1;
 
 % Define horizon
-N = 98;
+N = 99;
 
 %% Optimization
 tic

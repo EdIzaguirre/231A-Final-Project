@@ -4,8 +4,8 @@
 %Fmax = 1690*1000;
 Fmax = 856000;
 dmax = 5*pi/180;
-umin = [0; -dmax; 0; 0];
-umax = [Fmax; dmax; 90*pi/180; 90*pi/180];  % 200 is miniumum for u3 and u4
+umin = [0; -dmax*Fmax; 0; 0];
+umax = [Fmax; dmax*Fmax; 90*pi/180; 90*pi/180];  % 200 is miniumum for u3 and u4
 tmin = -20*pi/180;
 tmax = 20*pi/180;
 zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
@@ -21,13 +21,14 @@ zN = [0;0;0;0];
 TS = 0.1;
 
 % Define horizon
-N = 100;
-M = 80;
+N = 99;
+M = 110;
 zOpt = zeros(4,M+1);
 zOpt(:,1) = z0;
 uOpt = zeros(4,M);
 
 %% Optimization
+tic
 for t = 1:M
     disp(t);
     z = sdpvar(4,N+1);
@@ -69,6 +70,7 @@ for t = 1:M
     uOpt(:,t) = uO(:,1);
     zOpt(:,t+1) = RocketDynTrajectory(zOpt(:,t),uOpt(:,t),xbar_k,xbar_kNext);
 end
+toc
 %% Plotting
 figure;
 subplot(2,2,1)
