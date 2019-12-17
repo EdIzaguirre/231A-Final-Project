@@ -15,34 +15,35 @@ v0 = 205.2;
 alt0 = -1061;
 t0 = 10*pi/180;
 z0 = [t0; 0; alt0; v0];
-%zN = [0;0;0;0];
+zN = [0;0;0;0];
 
-% LQR
-A = [1 0.1 0 0; 0 1 0 0; 0 0 1 0.1; 0 0 0 1]; %Abar and Bbar from z at N+1
-B = [0 0 0 0; 0 -0.3465 0 0; 0 0 0 0; 0 0 -0.0004 -0.0004]; 
-Q = diag([1 15 10 15])/(1e8);
+% % LQR
+% A = [1 0.1 0 0; 0 1 0 0; 0 0 1 0.1; 0 0 0 1]; %Abar and Bbar from z at N+1
+% B = [0 0 0 0; 0 -0.3465 0 0; 0 0 0 0; 0 0 -0.0004 -0.0004]; 
+% Q = diag([1 15 10 15])/(1e8);
+Q = diag([0.1 0.1 0.1 0.1]);
 R = 1;
-[Finf,P]=dlqr(A,B,Q,R);
-AclF=A-B*Finf;
-nu = size(B,2);
-
-% constraint sets represented as polyhedra
-Z = Polyhedron('lb',zmin,'ub',zmax);
-U = Polyhedron('lb',umin,'ub',umax);
-% remember to convert input constraints in state constraints
-S=Z.intersect(Polyhedron('H',[-U.H(:,1:nu)*Finf U.H(:,nu+1)]));
-tic
-OinfF=max_pos_inv(AclF,S);
-toc
-Af=OinfF.H(:,1:end-1);
-bf=OinfF.H(:,end);
+% [Finf,P]=dlqr(A,B,Q,R);
+% AclF=A-B*Finf;
+% nu = size(B,2);
+% 
+% % constraint sets represented as polyhedra
+% Z = Polyhedron('lb',zmin,'ub',zmax);
+% U = Polyhedron('lb.',umin,'ub',umax);
+% % remember to convert input constraints in state constraints
+% S=Z.intersect(Polyhedron('H',[-U.H(:,1:nu)*Finf U.H(:,nu+1)]));
+% tic
+% OinfF=max_pos_inv(AclF,S);
+% toc
+% Af=OinfF.H(:,1:end-1);
+% bf=OinfF.H(:,end);
 
 % Define sampling time
 TS = 0.1;
 
 % Define horizon
-N = 99;
-M = 3;
+N = 50;
+M = 20;
 zOpt = zeros(4,M+1);
 zOpt(:,1) = z0;
 uOpt = zeros(4,M);
@@ -56,10 +57,10 @@ for t = 1:M
     z = sdpvar(4,N+1);
     u = sdpvar(4,N);
 
-    constraints = [z(:,1) == zOpt(:,t)];% z(:,end) == zN];
-    constraints = [constraints, Af*z(:,N+1)<=bf];
+    constraints = [z(:,1) == zOpt(:,t) z(:,end) == zN];
+%     constraints = [constraints, Af*z(:,N+1)<=bf];
     cost = 0;
-    cost = cost + z(:,N+1)'*P*z(:,N+1);
+%     cost = cost + z(:,N+1)'*P*z(:,N+1);
 
     for k = 1:N % stuff for all k to N-1
         xbar_k = xBar(k,:);
@@ -128,12 +129,6 @@ subplot(1,4,4)
 plot(linspace(0,10,M), uOpt(4,:)*180/pi)
 xlabel('t (s)')
 ylabel('fin2 (degrees)')
-
-
-
-
-
-
 
 
 
