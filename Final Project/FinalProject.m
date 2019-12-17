@@ -11,21 +11,23 @@ tmax = 20*pi/180;
 zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
 
 % Initial conditions
-v0 = 205.2;
-alt0 = -1061; % -1228m in Original Problem
+v0 = 110;
+alt0 = -1410; % -1228m in Original Problem
 t0 = 10*pi/180;
 z0 = [t0; 0; alt0; v0];
 zN = [0;0;0;0];
 
-% Define sampling time
-TS = 0.1;
-
 % Define horizon
-<<<<<<< HEAD
-N = 55;
-=======
-N = 99;
->>>>>>> 1c05e3d1fb9d9d11b5a23b4ca85d48745d4148fc
+deltaT = 25;
+N = 100;  
+
+totTime = linspace(0,deltaT,N);
+TS = totTime(2) - totTime(1);  
+
+% Creating noise with mean 0 and variance 10
+mu=0; sigma=sqrt(10);
+rng(0);
+noise = sigma*randn(4,N)+mu;
 
 %% Optimization
 tic
@@ -39,13 +41,19 @@ cost = 0;
 
 xBar = xBar();
 
+alpha1 = 1/((Fmax)^2);
+alpha2 = 0.001;
+alpha3 = 0.001;
+alpha4 = 0.001;
+
 for k = 1:N % stuff for all k to N-1
     xbar_k = xBar(k,:);
     xbar_kNext = xBar(k+1,:);
-    cost = cost + z(:,k)'*Q*z(:,k) + (u(1,k)/Fmax)^2 + u(2,k)^2 + u(3,k)^2 + u(4,k)^2; %objective
-    constraints = [constraints z(:,k+1) == RocketDynTrajectory(z(:,k),u(:,k),xbar_k,xbar_kNext) , umin<= u(:,k) <= umax]; %dynf and u constr
-    constraints = [constraints zmin <= z(:,k)<= zmax];
-    end
+    
+    cost = cost + z(:,k)'*Q*z(:,k) + alpha1*u(1,k)^2 + alpha2*u(2,k)^2 + alpha3*u(3,k)^2 + alpha4*u(4,k)^2; %objective
+    
+    constraints = [constraints z(:,k+1) == RocketDynTrajectory(z(:,k),u(:,k),xbar_k,xbar_kNext,noise(:,k)) , umin<= u(:,k) <= umax]; %dynf and u constr
+end
 
     if k == N 
         constraints = [constraints zmin <= z(:,N+1)<= zmax]; %constr z_n+1
@@ -99,13 +107,17 @@ ylabel('fin2 (degrees)')
 
 % Drag constants/variables
 rho = 1.225;
-Cd = 0.45;
-A_tot = 100;
+Cd = 0.14;
+A_tot = 1.5;
 b = 9;
 Fd1 = (1/2*rho*Cd*A_tot*sin(uOpt(3,:)).*zOpt(4,1:end-1).^2)';
 Fd2 = (1/2*rho*Cd*A_tot*sin(uOpt(4,:)).*zOpt(4,1:end-1).^2)';
 
-Fd1 + Fd2
+sum(uOpt(1,:)') 
+
+max(Fd1) 
+
+
 
 
 
