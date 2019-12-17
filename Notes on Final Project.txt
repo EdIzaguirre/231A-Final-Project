@@ -1,0 +1,23 @@
+Link to Overleaf
+https://www.overleaf.com/project/5ded9bc80230af00019962d0
+
+Link to Google Sheet:
+https://docs.google.com/presentation/d/1W39e-_HXNPrrQdg1tMPCHFIFKdL6VCsaXwWRRL7sHPo/edit?usp=sharing
+
+To Do
+
+- Get Cd and reference area from a paper. Pick some average Cd (it usually varies by angle of attack) and justify usage.
+- I will reformulate constant acceleration problem, cutting magnitude of thrust(This depends on our Cd and reference area). Should also make it more feasible.
+- MPC is difficult, some people should try Xf = 0, others should tackle some sort of LQR/pole placement method, using new , more feasible xBar. Also be sure to include same noise term as in batch. (This should not go on past 4:00 PM!)
+- Perhaps tuning of cost function (Q, new alpha coefficients I added) could help!
+- I pushed noise to GitHub, linearization branch for Batch Approach
+- PPT needs work
+- Overleaf needs finishing, results and references
+
+Timeline:
+
+4:00 PM Finish MPC, regardless of results
+
+5:00 - 7:00 PM: Finish Powerpoint, record audio
+
+7:00 - 9:00 PM: Compile audio/video, finishing touches on overleaf, submit.

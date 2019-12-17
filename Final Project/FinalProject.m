@@ -55,7 +55,6 @@ for k = 1:N % stuff for all k to N-1
     constraints = [constraints z(:,k+1) == RocketDynTrajectory(z(:,k),u(:,k),xbar_k,xbar_kNext,noise(:,k)) , umin<= u(:,k) <= umax]; %dynf and u constr
 end
 
-
     if k == N 
         constraints = [constraints zmin <= z(:,N+1)<= zmax]; %constr z_n+1
     end
