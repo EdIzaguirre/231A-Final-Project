@@ -11,17 +11,18 @@ tmax = 20*pi/180;
 zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
 
 % Initial conditions
-v0 = 205.2;
-alt0 = -1061; % -1228m in Original Problem
+v0 = 110;
+alt0 = -1410; % -1228m in Original Problem
 t0 = 10*pi/180;
 z0 = [t0; 0; alt0; v0];
 zN = [0;0;0;0];
 
-% Define sampling time
-TS = 0.1;
-
 % Define horizon
-N = 100;
+deltaT = 25;
+N = 100;  
+
+totTime = linspace(0,deltaT,N);
+TS = totTime(2) - totTime(1);  
 
 % Creating noise with mean 0 and variance 10
 mu=0; sigma=sqrt(10);
@@ -41,9 +42,9 @@ cost = 0;
 xBar = xBar();
 
 alpha1 = 1/((Fmax)^2);
-alpha2 = 1;
-alpha3 = 1;
-alpha4 = 1;
+alpha2 = 0.001;
+alpha3 = 0.001;
+alpha4 = 0.001;
 
 for k = 1:N % stuff for all k to N-1
     xbar_k = xBar(k,:);
