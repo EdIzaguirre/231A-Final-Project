@@ -13,25 +13,32 @@ function [xBar] = xBar()
     g = 9.8;
 
     % Initial conditions
-    deltaT = 10; %seconds
-    v0 = -205.2; % meters/sec
-    y0 = 1061; % meters
+    deltaT = 25; %seconds
+    v0 = -110; % meters/sec
 
     % Finding constant force to get rocket to land
-    F = m * (g + (0 - (v0))/deltaT)
+    F = m * (g + (0 - (v0))/deltaT);
 
-    %% Simulating for N steps
-
+    %%
     % Calculate Acceleration
     a = F/m - g; %m/s^2
 
+    % Calculate Original Height
+    y0 = l/2 -(1/2 * a * deltaT^2 + v0*deltaT);
+
     % Getting Proper Time Spacing 
+<<<<<<< HEAD
 % <<<<<<< HEAD
     N = 51;  % 100 Samples
 % =======
 %     N = 100;  % 100 Samples
 % >>>>>>> 1c05e3d1fb9d9d11b5a23b4ca85d48745d4148fc
     totTime = linspace(0,10,N);
+=======
+    N = 101;  % 100 Samples
+    
+    totTime = linspace(0,deltaT,N);
+>>>>>>> a524e760634373dd268522f47778d755209ca630
     TS = totTime(2) - totTime(1);  
 
     % Begin Simulation
@@ -57,18 +64,19 @@ function [xBar] = xBar()
     % Negative because I solved the above problems assuming up is positive.
     
     %% Checking to see if the trajectory looks good
-    figure();
-    subplot(2,1,1)
-    plot(linspace(1,10,N),-hList)
-    title('Height vs. Time')
-    xlabel('Time (sec)')
-    ylabel('Height (m) (Negative is up)')
-    hold on;
-    subplot(2,1,2)
-    plot(linspace(1,10,N),-vList)
-    title('Velocity vs. Time')
-    xlabel('Time (sec)')
-    ylabel('Velocity (m/s) (Positive is down)')
+%     figure();
+%     subplot(2,1,1)
+%     plot(linspace(1,10,101),-hList)
+%     title('Height vs. Time')
+%     xlabel('Time (sec)')
+%     ylabel('Height (m) (Negative is up)')
+%     hold on;
+%     subplot(2,1,2)
+%     plot(linspace(1,10,101),-vList)
+%     title('Velocity vs. Time')
+%     xlabel('Time (sec)')
+%     ylabel('Velocity (m/s) (Positive is down)')
+
 end
 
 
