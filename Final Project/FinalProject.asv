@@ -17,6 +17,13 @@ t0 = 10*pi/180;
 z0 = [t0; 0; alt0; v0];
 zN = [0;0;0;0];
 
+% LQR
+A = [1 0.1 0 0; 0 1 0 0; 0 0 1 0.1; 0 0 0 1];
+B = [0 0 0 0; 0 -0.3465 0 0; 0 0 0 0; 0 0 -0.0004 -0.0004];
+Q = diag([1 15 10 15])/(1e8);
+R = 1;
+[Finf,P]=dlqr(A,B,Q,R);
+
 % Define sampling time
 TS = 0.1;
 
@@ -28,7 +35,6 @@ tic
 z = sdpvar(4,N+1);
 u = sdpvar(4,N);
     
-Q = diag([1 15 10 15])/(1e8);
 
 constraints = [z(:,1) == z0, z(:,end) == zN];
 cost = 0;

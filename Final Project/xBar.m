@@ -26,7 +26,7 @@ function [xBar] = xBar()
     a = F/m - g; %m/s^2
 
     % Getting Proper Time Spacing 
-    N = 99;  % 100 Samples
+    N = 100;  % 100 Samples
     totTime = linspace(0,10,N);
     TS = totTime(2) - totTime(1);  
 
