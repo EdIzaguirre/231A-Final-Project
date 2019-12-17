@@ -4,6 +4,9 @@ https://www.overleaf.com/project/5ded9bc80230af00019962d0
 Link to Google Sheet:
 https://docs.google.com/presentation/d/1W39e-_HXNPrrQdg1tMPCHFIFKdL6VCsaXwWRRL7sHPo/edit?usp=sharing
 
-- Get Cd and reference area from a paper
-- I pushed noise to GitHub, linearization branch
-- 
+- Get Cd and reference area from a paper. Pick some average Cd (it usually varies by angle of attack) and justify usage.
+- I will reformulate constant acceleration problem, bringing the order of magnitude of thrust closer to order of magnitude as max drag (10^3) (This depends on our Cd and reference area). Should also make it more feasible.
+- Perhaps tuning of cost function (Q, new alpha coefficients I added) could help!
+- I pushed noise to GitHub, linearization branch for Batch Approach
+- PPT needs work
+- Overleaf needs finishing, results and references
