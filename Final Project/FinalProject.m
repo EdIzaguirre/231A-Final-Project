@@ -21,7 +21,12 @@ zN = [0;0;0;0];
 TS = 0.1;
 
 % Define horizon
-N = 98;
+N = 100;
+
+% Creating noise with mean 0 and variance 10
+mu=0; sigma=sqrt(10);
+rng(0);
+noise = sigma*randn(4,N)+mu;
 
 %% Optimization
 tic
@@ -35,11 +40,18 @@ cost = 0;
 
 xBar = xBar();
 
+alpha1 = 1/((Fmax)^2);
+alpha2 = 1;
+alpha3 = 1;
+alpha4 = 1;
+
 for k = 1:N % stuff for all k to N-1
     xbar_k = xBar(k,:);
     xbar_kNext = xBar(k+1,:);
-    cost = cost + z(:,k)'*Q*z(:,k) + (u(1,k)/Fmax)^2 + u(2,k)^2 + u(3,k)^2 + u(4,k)^2; %objective
-    constraints = [constraints z(:,k+1) == RocketDynTrajectory(z(:,k),u(:,k),xbar_k,xbar_kNext) , umin<= u(:,k) <= umax]; %dynf and u constr
+    
+    cost = cost + z(:,k)'*Q*z(:,k) + alpha1*u(1,k)^2 + alpha2*u(2,k)^2 + alpha3*u(3,k)^2 + alpha4*u(4,k)^2; %objective
+    
+    constraints = [constraints z(:,k+1) == RocketDynTrajectory(z(:,k),u(:,k),xbar_k,xbar_kNext,noise(:,k)) , umin<= u(:,k) <= umax]; %dynf and u constr
 end
 
 for k = 1:N+1 %stuff for all k to N
@@ -94,13 +106,17 @@ ylabel('fin2 (degrees)')
 
 % Drag constants/variables
 rho = 1.225;
-Cd = 0.45;
-A_tot = 100;
+Cd = 0.14;
+A_tot = 1.5;
 b = 9;
 Fd1 = (1/2*rho*Cd*A_tot*sin(uOpt(3,:)).*zOpt(4,1:end-1).^2)';
 Fd2 = (1/2*rho*Cd*A_tot*sin(uOpt(4,:)).*zOpt(4,1:end-1).^2)';
 
-Fd1 + Fd2
+sum(uOpt(1,:)') 
+
+max(Fd1) 
+
+
 
 
 

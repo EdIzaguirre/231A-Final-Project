@@ -19,7 +19,7 @@ function [xBar] = xBar()
     y0 = 1061; % meters
 
     % Finding constant force to get rocket to land
-    F = m * (g + (0 - (v0))/deltaT)
+    F = m * (g + (0 - (v0))/deltaT);
 
     %% Simulating for N steps
 
@@ -27,7 +27,7 @@ function [xBar] = xBar()
     a = F/m - g; %m/s^2
 
     % Getting Proper Time Spacing 
-    N = 99;  % 100 Samples
+    N = 101;  % 100 Samples
     totTime = linspace(0,10,N);
     TS = totTime(2) - totTime(1);  
 
@@ -54,18 +54,18 @@ function [xBar] = xBar()
     % Negative because I solved the above problems assuming up is positive.
     
     %% Checking to see if the trajectory looks good
-    figure();
-    subplot(2,1,1)
-    plot(linspace(1,10,101),-hList)
-    title('Height vs. Time')
-    xlabel('Time (sec)')
-    ylabel('Height (m) (Negative is up)')
-    hold on;
-    subplot(2,1,2)
-    plot(linspace(1,10,101),-vList)
-    title('Velocity vs. Time')
-    xlabel('Time (sec)')
-    ylabel('Velocity (m/s) (Positive is down)')
+%     figure();
+%     subplot(2,1,1)
+%     plot(linspace(1,10,101),-hList)
+%     title('Height vs. Time')
+%     xlabel('Time (sec)')
+%     ylabel('Height (m) (Negative is up)')
+%     hold on;
+%     subplot(2,1,2)
+%     plot(linspace(1,10,101),-vList)
+%     title('Velocity vs. Time')
+%     xlabel('Time (sec)')
+%     ylabel('Velocity (m/s) (Positive is down)')
 end
 
 
