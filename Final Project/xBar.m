@@ -1,5 +1,4 @@
 function [xBar] = xBar()
-    clc; clear;
     %% Finding fixed trajectory
     % Note: Borelli said to set all grid fin inputs to 0 (u3 and u4), set the
     % gimbal angle to 0 (u2) and set F (u1) to some function slightly greater
@@ -28,6 +27,7 @@ function [xBar] = xBar()
 
     % Getting Proper Time Spacing 
     N = 101;  % 100 Samples
+    
     totTime = linspace(0,10,N);
     TS = totTime(2) - totTime(1);  
 
@@ -38,7 +38,7 @@ function [xBar] = xBar()
         nextVelocity = a*TS + v0;
         nextHeight = y0 + (1/2) * a * TS^2 + v0 * TS;
         t = t+TS;
-
+        
         % Append to lists and reinitialize v0 and h
         vList = [vList; nextVelocity]; hList = [hList; nextHeight]; 
         v0 = vList(end); y0 = hList(end);
@@ -66,6 +66,7 @@ function [xBar] = xBar()
 %     title('Velocity vs. Time')
 %     xlabel('Time (sec)')
 %     ylabel('Velocity (m/s) (Positive is down)')
+
 end
 
 

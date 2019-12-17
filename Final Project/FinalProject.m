@@ -4,8 +4,8 @@
 %Fmax = 1690*1000;
 Fmax = 856000; % 8.3829e+05 number used in constant acceleration
 dmax = 5*pi/180;
-umin = [0; -dmax; 0; 0];
-umax = [Fmax; dmax; 90*pi/180; 90*pi/180];  % 200 is miniumum for u3 and u4
+umin = [0; -dmax*Fmax; 0; 0];
+umax = [Fmax; dmax*Fmax; 90*pi/180; 90*pi/180];  % 200 is miniumum for u3 and u4
 tmin = -20*pi/180;
 tmax = 20*pi/180;
 zmin = [tmin; -100; -3000; -100]; zmax = [tmax; 100; 0; 500];
@@ -54,15 +54,16 @@ for k = 1:N % stuff for all k to N-1
     constraints = [constraints z(:,k+1) == RocketDynTrajectory(z(:,k),u(:,k),xbar_k,xbar_kNext,noise(:,k)) , umin<= u(:,k) <= umax]; %dynf and u constr
 end
 
-for k = 1:N+1 %stuff for all k to N
-    constraints = [constraints zmin <= z(:,k)<= zmax]; %constr z_n+1
-end
+
+    if k == N 
+        constraints = [constraints zmin <= z(:,N+1)<= zmax]; %constr z_n+1
+    end
 
 options = sdpsettings('solver','quadprog');
 % options = sdpsettings('verbose',1,'solver','fmincon','usex0',1);
 diagnostics = optimize(constraints, cost, options);
-zOpt = value(z)
-uOpt = value(u)
+zOpt = value(z);
+uOpt = value(u);
 toc
 
 %% Plotting

@@ -1,5 +1,4 @@
 function [Ac,Bc] = linDynamics()
-    clear; clc;
 
     %% Begin with continous time dynamics
 

@@ -2,6 +2,7 @@ function znext = RocketDynTrajectory(z,u,xbar,xbarNext,noise)
     syms theta omega h v u1 u2 u3 u4
     Syms = [theta omega h v u1 u2 u3 u4];
 
+
     D = [0.001;
         0.001;
         0.1;
