@@ -1,5 +1,5 @@
 %% Rocket Landing with Grid Fins (Linearized)
-
+clc; clear;
 % Constraints
 %Fmax = 1690*1000;
 Fmax = 856000; % 8.3829e+05 number used in constant acceleration
